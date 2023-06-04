@@ -2,11 +2,22 @@ package database
 
 import (
 	"database/sql"
+	"fmt"
 	"sync"
 )
 
 const (
 	maxConnections = 10
+	host           = "localhost"
+	port           = 5432
+	user           = "postgres"
+	password       = "root"
+	dbname         = "go-crud"
+)
+
+var (
+	ConnectionString = fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
+		host, port, user, password, dbname)
 )
 
 type ConnectionPool struct {

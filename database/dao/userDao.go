@@ -5,12 +5,29 @@ import (
 	"crud/database/model"
 	"fmt"
 	"log"
+	"sync"
 
 	_ "github.com/lib/pq"
 )
 
 type UserDao struct {
 	ConnPool *database.ConnectionPool
+}
+
+var (
+	once    sync.Once
+	userDao *UserDao
+)
+
+func InitUserDao() *UserDao {
+	once.Do(func() {
+		connPool, err := database.GetConnectionPool(database.ConnectionString)
+		if err != nil {
+			log.Panic(err)
+		}
+		userDao = &UserDao{ConnPool: connPool}
+	})
+	return userDao
 }
 
 func (dao *UserDao) FindAll() ([]interface{}, error) {
